@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>〇</title>
+  
+  <subtitle>世界的本质即是无限的循环</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2019-07-25T15:01:01.355Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>rootReturn0</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hello world</title>
+    <link href="http://yoursite.com/2019/07/25/hello-world/"/>
+    <id>http://yoursite.com/2019/07/25/hello-world/</id>
+    <published>2019-07-25T12:43:01.000Z</published>
+    <updated>2019-07-25T15:01:01.355Z</updated>
+    
+    <content type="html"><![CDATA[<pre class=" language-cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>    cout<span class="token operator">&lt;&lt;</span><span class="token string">"Hello world!"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span><span class="token punctuation">}</span></code></pre><pre class=" language-python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'Hello world!'</span><span class="token punctuation">)</span></code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre class=&quot; language-cpp&quot;&gt;&lt;code class=&quot;language-cpp&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;sayHello&lt;/span&gt;&lt;s
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ILY</title>
+    <link href="http://yoursite.com/2019/07/25/ILY/"/>
+    <id>http://yoursite.com/2019/07/25/ILY/</id>
+    <published>2019-07-25T11:26:00.000Z</published>
+    <updated>2019-07-25T11:58:50.263Z</updated>
+    
+    <content type="html"><![CDATA[<p>I am here. A ghost.</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;I am here. A ghost.&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+</feed>
