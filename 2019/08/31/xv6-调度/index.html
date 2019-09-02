@@ -216,9 +216,41 @@
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
     </ul>
   
 
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
   
 </nav>
 
@@ -318,38 +350,47 @@
       
 
       
-        <h2 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h2><p>由于可能同时有多个CPU请求进行调度，故需要进程表锁<code>ptable.lock</code>来避免竞争。</p>
+        <h2>调度</h2>
+<p>由于可能同时有多个CPU请求进行调度，故需要进程表锁<code>ptable.lock</code>来避免竞争。</p>
 <p>因此，进程在让出CPU前，必须要获得进程表锁，并释放其拥有的其他锁（避免同时持有多个锁导致死锁），修改自己的状态<code>proc-&gt;state</code>，然后进行调度。</p>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>以下函数位于代码文件<code>proc.c</code>中。</p>
-<h4 id="sched"><a href="#sched" class="headerlink" title="sched"></a>sched</h4><p>进程进入调度器，且必须持有进程表锁并改变进程状态。由于进程此时持有进程表锁，所以CPU应该是在关中断的情况下运行。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">sched(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> intena;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> = <span class="title">myproc</span>();</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 未持有进程表锁，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(!holding(&amp;ptable.lock))</span><br><span class="line">    panic(<span class="string">"sched ptable.lock"</span>);</span><br><span class="line">  <span class="comment">// 处于锁状态，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(mycpu()-&gt;ncli != <span class="number">1</span>)</span><br><span class="line">    panic(<span class="string">"sched locks"</span>);</span><br><span class="line">  <span class="comment">// 进程处于运行态，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(p-&gt;state == RUNNING)</span><br><span class="line">    panic(<span class="string">"sched running"</span>);</span><br><span class="line">  <span class="comment">// 开中断，不可执行mycpu()函数，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(readeflags()&amp;FL_IF)</span><br><span class="line">    panic(<span class="string">"sched interruptible"</span>);</span><br><span class="line">  intena = mycpu()-&gt;intena; <span class="comment">// 暂存状态</span></span><br><span class="line">  swtch(&amp;p-&gt;context, mycpu()-&gt;scheduler); <span class="comment">// 保存当前上下文，并切换到之前保存的调度器的上下文，进入调度器</span></span><br><span class="line">  mycpu()-&gt;intena = intena; <span class="comment">// 恢复状态</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h4><p>在xv6中，使用时间片轮转法进行调度。当进程用完它的CPU时间片时，时钟中断会调用<code>yield</code>函数来让出CPU给新的进程，<code>yield</code>调用<code>sched</code>函数，<code>sched</code>调用<code>swtch</code>来切换都调度器线程：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">yield(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  acquire(&amp;ptable.lock);  <span class="comment">//DOC: yieldlock 请求进程表锁</span></span><br><span class="line">  myproc()-&gt;state = RUNNABLE; <span class="comment">// 切换进程状态</span></span><br><span class="line">  sched(); </span><br><span class="line">  release(&amp;ptable.lock); <span class="comment">// 释放进程表锁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="scheduler"><a href="#scheduler" class="headerlink" title="scheduler"></a>scheduler</h4><p>每个CPU在设置完成自己之后调用<code>scheduler</code>。</p>
+<h3>函数</h3>
+<p>以下函数位于代码文件<code>proc.c</code>中。</p>
+<h4>sched</h4>
+<p>进程进入调度器，且必须持有进程表锁并改变进程状态。由于进程此时持有进程表锁，所以CPU应该是在关中断的情况下运行。</p>
+<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">sched(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">int</span> intena;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span> = <span class="title">myproc</span>();</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 未持有进程表锁，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(!holding(&amp;ptable.lock))</span><br><span class="line">    panic(<span class="string">"sched ptable.lock"</span>);</span><br><span class="line">  <span class="comment">// 处于锁状态，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(mycpu()-&gt;ncli != <span class="number">1</span>)</span><br><span class="line">    panic(<span class="string">"sched locks"</span>);</span><br><span class="line">  <span class="comment">// 进程处于运行态，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(p-&gt;state == RUNNING)</span><br><span class="line">    panic(<span class="string">"sched running"</span>);</span><br><span class="line">  <span class="comment">// 开中断，不可执行mycpu()函数，不应进入调度，引发内核错误</span></span><br><span class="line">  <span class="keyword">if</span>(readeflags()&amp;FL_IF)</span><br><span class="line">    panic(<span class="string">"sched interruptible"</span>);</span><br><span class="line">  intena = mycpu()-&gt;intena; <span class="comment">// 暂存状态</span></span><br><span class="line">  swtch(&amp;p-&gt;context, mycpu()-&gt;scheduler); <span class="comment">// 保存当前上下文，并切换到之前保存的调度器的上下文，进入调度器</span></span><br><span class="line">  mycpu()-&gt;intena = intena; <span class="comment">// 恢复状态</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4>yield</h4>
+<p>在xv6中，使用时间片轮转法进行调度。当进程用完它的CPU时间片时，时钟中断会调用<code>yield</code>函数来让出CPU给新的进程，<code>yield</code>调用<code>sched</code>函数，<code>sched</code>调用<code>swtch</code>来切换都调度器线程：</p>
+<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">yield(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  acquire(&amp;ptable.lock);  <span class="comment">//DOC: yieldlock 请求进程表锁</span></span><br><span class="line">  myproc()-&gt;state = RUNNABLE; <span class="comment">// 切换进程状态</span></span><br><span class="line">  sched(); </span><br><span class="line">  release(&amp;ptable.lock); <span class="comment">// 释放进程表锁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4>scheduler</h4>
+<p>每个CPU在设置完成自己之后调用<code>scheduler</code>。</p>
 <p>调度器<code>scheduler</code>永远不会返回，而是不断循环。循环步骤为：</p>
 <ol>
 <li>选择要运行的流程</li>
 <li>swtch开始运行该过程</li>
 <li>最终该过程通过swtch将控制转移回调度程序。</li>
 </ol>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">scheduler(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">cpu</span> *<span class="title">c</span> = <span class="title">mycpu</span>();</span></span><br><span class="line">  c-&gt;proc = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 不断循环，永不停止</span></span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="comment">// 开中断，以允许I/O到达</span></span><br><span class="line">    sti();  </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在进程表上不断循环，寻找进程并运行</span></span><br><span class="line">    acquire(&amp;ptable.lock); <span class="comment">// 请求进程表锁</span></span><br><span class="line">    <span class="keyword">for</span>(p = ptable.proc; p &lt; &amp;ptable.proc[NPROC]; p++)&#123;</span><br><span class="line">      <span class="keyword">if</span>(p-&gt;state != RUNNABLE) <span class="comment">// 进程不可运行，转到下一个进程</span></span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Switch to chosen process.  It is the process's job</span></span><br><span class="line">      <span class="comment">// to release ptable.lock and then reacquire it</span></span><br><span class="line">      <span class="comment">// before jumping back to us.</span></span><br><span class="line">      <span class="comment">// 切换到选定的进程</span></span><br><span class="line">      c-&gt;proc = p;</span><br><span class="line">      switchuvm(p); <span class="comment">// 切换到该进程的页表</span></span><br><span class="line">      p-&gt;state = RUNNING;</span><br><span class="line"></span><br><span class="line">      swtch(&amp;(c-&gt;scheduler), p-&gt;context); <span class="comment">// 切换到该进程运行</span></span><br><span class="line">      switchkvm(); <span class="comment">// 当没有进程正在运行时，将页表寄存器切换到仅内核页表。</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// Process is done running for now.</span></span><br><span class="line">      <span class="comment">// It should have changed its p-&gt;state before coming back.</span></span><br><span class="line">      <span class="comment">// 进程已结束运行，改变自身状态</span></span><br><span class="line">      c-&gt;proc = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    release(&amp;ptable.lock); <span class="comment">// 释放进程表锁，防止其他CPU无法进行调度</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="锁与中断"><a href="#锁与中断" class="headerlink" title="锁与中断"></a>锁与中断</h3><h4 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h4><ul>
+<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">scheduler(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">proc</span> *<span class="title">p</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">cpu</span> *<span class="title">c</span> = <span class="title">mycpu</span>();</span></span><br><span class="line">  c-&gt;proc = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 不断循环，永不停止</span></span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="comment">// 开中断，以允许I/O到达</span></span><br><span class="line">    sti();  </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在进程表上不断循环，寻找进程并运行</span></span><br><span class="line">    acquire(&amp;ptable.lock); <span class="comment">// 请求进程表锁</span></span><br><span class="line">    <span class="keyword">for</span>(p = ptable.proc; p &lt; &amp;ptable.proc[NPROC]; p++)&#123;</span><br><span class="line">      <span class="keyword">if</span>(p-&gt;state != RUNNABLE) <span class="comment">// 进程不可运行，转到下一个进程</span></span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Switch to chosen process.  It is the process's job</span></span><br><span class="line">      <span class="comment">// to release ptable.lock and then reacquire it</span></span><br><span class="line">      <span class="comment">// before jumping back to us.</span></span><br><span class="line">      <span class="comment">// 切换到选定的进程</span></span><br><span class="line">      c-&gt;proc = p;</span><br><span class="line">      switchuvm(p); <span class="comment">// 切换到该进程的页表</span></span><br><span class="line">      p-&gt;state = RUNNING;</span><br><span class="line"></span><br><span class="line">      swtch(&amp;(c-&gt;scheduler), p-&gt;context); <span class="comment">// 切换到该进程运行</span></span><br><span class="line">      switchkvm(); <span class="comment">// 当没有进程正在运行时，将页表寄存器切换到仅内核页表。</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// Process is done running for now.</span></span><br><span class="line">      <span class="comment">// It should have changed its p-&gt;state before coming back.</span></span><br><span class="line">      <span class="comment">// 进程已结束运行，改变自身状态</span></span><br><span class="line">      c-&gt;proc = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    release(&amp;ptable.lock); <span class="comment">// 释放进程表锁，防止其他CPU无法进行调度</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3>锁与中断</h3>
+<h4>锁</h4>
+<ul>
 <li>为保证进程状态的上下文在运行<code>swtch</code>时保持不变：进程表锁由旧进程获得，新进程释放。</li>
 <li>为防止其他CPU闲置时锁被当前CPU占有而无法调度，其他CPU上运行进程无法让出CPU，导致死锁的情况：在遍历一次进程表后总要释放锁。</li>
 </ul>
-<h4 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h4><ul>
+<h4>中断</h4>
+<ul>
 <li>为防止所有进程都在等待I/O时关中断导致的I/O无法到达引发的死锁，调度器在每次循坏开始前进行开中断。</li>
 </ul>
-<h2 id="睡眠与唤醒"><a href="#睡眠与唤醒" class="headerlink" title="睡眠与唤醒"></a>睡眠与唤醒</h2><p>函数<code>sleep</code>和<code>wakeup</code>位于代码文件<code>proc.c</code>中。</p>
+<h2>睡眠与唤醒</h2>
+<p>函数<code>sleep</code>和<code>wakeup</code>位于代码文件<code>proc.c</code>中。</p>
 <p>使进程进入睡眠或进行唤醒均需要改变进程状态，故需要进程表锁以保证状态修改的原子性。其中函数<code>sleep</code>要在使进程进入睡眠前获取进程表锁，以保证在使函数进入睡眠时至少持有一个锁，防止<code>wakeup</code>在进程进入睡眠前被调用导致的死锁。当<code>sleep</code>本身持有的锁为进程表锁时，则略过请求这一步，防止死锁。</p>
-<h2 id="可改进之处"><a href="#可改进之处" class="headerlink" title="可改进之处"></a>可改进之处</h2><h3 id="调度-1"><a href="#调度-1" class="headerlink" title="调度"></a>调度</h3><ul>
+<h2>可改进之处</h2>
+<h3>调度</h3>
+<ul>
 <li>轮转法无优先级的区分</li>
 </ul>
 <p>会导致高优先级的进程无法优先运行，可能导致系统运行时间的增加，影响使用者在实际使用时的体验。可使用其他较为复杂的算法，如高响应比优先算法等以改进体验。</p>
-<h3 id="睡眠与唤醒-1"><a href="#睡眠与唤醒-1" class="headerlink" title="睡眠与唤醒"></a>睡眠与唤醒</h3><ul>
+<h3>睡眠与唤醒</h3>
+<ul>
 <li>唤醒需要遍历进程表</li>
 </ul>
 <p>在进程数量大的时候这种做法效率极低。使用另一个结构体来维护链表可大大提高效率。</p>
@@ -526,7 +567,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#调度"><span class="nav-number">1.</span> <span class="nav-text">调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">1.1.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sched"><span class="nav-number">1.1.1.</span> <span class="nav-text">sched</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yield"><span class="nav-number">1.1.2.</span> <span class="nav-text">yield</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scheduler"><span class="nav-number">1.1.3.</span> <span class="nav-text">scheduler</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁与中断"><span class="nav-number">1.2.</span> <span class="nav-text">锁与中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#锁"><span class="nav-number">1.2.1.</span> <span class="nav-text">锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中断"><span class="nav-number">1.2.2.</span> <span class="nav-text">中断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#睡眠与唤醒"><span class="nav-number">2.</span> <span class="nav-text">睡眠与唤醒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可改进之处"><span class="nav-number">3.</span> <span class="nav-text">可改进之处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调度-1"><span class="nav-number">3.1.</span> <span class="nav-text">调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#睡眠与唤醒-1"><span class="nav-number">3.2.</span> <span class="nav-text">睡眠与唤醒</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.1.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.1.</span> <span class="nav-text">sched</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.2.</span> <span class="nav-text">yield</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.3.</span> <span class="nav-text">scheduler</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.2.</span> <span class="nav-text">锁与中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.</span> <span class="nav-text">锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.2.2.</span> <span class="nav-text">中断</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">睡眠与唤醒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">可改进之处</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.1.</span> <span class="nav-text">调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.2.</span> <span class="nav-text">睡眠与唤醒</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -727,6 +768,323 @@
 
 
   
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
 
 
 
