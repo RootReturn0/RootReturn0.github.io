@@ -387,7 +387,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  39
+                  36
                 </span>
               
 
@@ -435,7 +435,7 @@
 <div id="decryptionError" style="display: none;">Incorrect Password!</div>
 <div id="noContentError" style="display: none;">No content to display!</div>
 <div id="encrypt-blog" style="display:none">
-U2FsdGVkX1+8IsyoWZhODLbqPPWe/9D8k+CdySxS6XbNktof+xMGJtlqTNF/i3Wyx0PgyWj6URuJ26tXwJnog7t32Er99XTvaTdwo4EEs+Nhoi/tJ8FSKHO8H+ErHLTvm9f6lKcibJ4Hc63Okpk1Q8mUgc56OKNDDGs2C6MCbb7GdQUiQQXWZw7AvJvL4rO3EO3swkt0uveqDgP9BDDHbiTTInd0SJmYczxkECRiLr8vTxQ6seYS0+Wea6eYdfi3QugqUAi+gDBNlXD7ZMQag+6J9LTkUauIeEl1m/J+Ls4tvdhcBD6i+GpHMkxJdmU9E4eYzqZvTf2ybP6L72RoLP//kj9LfXyRnrKWpUfW6HYPW3oeoo+VitFdYeHeJ6iHYZ/Ym981ga1JTFoMWJ7Fi7t660Oosrfur+5x+1rfb3V4ZZzUi/lxmH+Uuq9CCQlumKE9lFWTl1XQmOpLzwaxEm/FLlbaJvZBSEaBpvcQQbwtnoolUB0x2Mbmv5VjBs0rhUowPDCllJvPTdbroR/jLb59g5wuV7/uhIIZKUjmR1LUbflIwcDtTGqSJtdd2a3o8yrKYs0hTyDdlKwfuJDqKS5Go+3T8yshAFxYllfiWNC433BJvZ0BTPZEvXa/GzOQ9baYAs9t99RFgHqrbcIV6RynEecd55YoHZVZ7fmX5n4W39LeYiP/9zgXwrnsHE4heEOYr3bzbxERNIkj42hKvg==
+U2FsdGVkX1/RyHcEpBJKf9SMOR0SrMZ6ooOwNSGsgljtfGpRPglAmYArJIUpSlHsZkftAoTySAwi5IYPhha37tbm0st0T1Tq35xZK7pIXpyzuXkyzv6uMgKOiSKsR0890/ZVUSTMzNWv5i2SVHd3hmkFnip3L3SKi71MsrAClFUWLM1ieGaAyjHp53YYYjJqZS24zFJKEQ3O941j/v/EyG4A+dt0LwjDCyUTsrSzDnigrW8cW9TiwhvtznKM+2t0D6xW5HIRLlem6xfxOWY8uxSy4R7tkI8oYmS133VX2BjQsse7ATvo0xiU9DvrQZq2jk75qb5T/1qU0gpvSZYeymrv7ZKgSh5+4ib4qoac88/4SNE+Q1yyuy7RIWfU1tMPX/qdDqBmM/QrWKl+fxJuQEWirM7Iu2P/NttIWq492y9mez6sVyjR42q4vhCNYJ7h+jXkIqGt0ETNutl26VGAE5TjjiQE5l5BDrffYNyTblOmj0V346yXSSuoZ1dlPtjoZGk8jQO+ldXGwbROvOC1mI4oP8CB/YSruOO652wnoyArM+UKS7bRZPuqLcG5j5Af5QFim0b/q+XH6h8NLUUjgNdS5yV/UcayJweBWyygVZJvewLQDoGb/kaKZg7iIScfqMLWQtG77Ph4FkMBbbpuB33hN0Lhhh8mKz2FUw9CFPDJq1TtzpiqTc8rfeewkEXr2Dtr+HXEfp5iNsdxbQfj+Q==
 </div>
 <script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
       
@@ -447,7 +447,54 @@ U2FsdGVkX1+8IsyoWZhODLbqPPWe/9D8k+CdySxS6XbNktof+xMGJtlqTNF/i3Wyx0PgyWj6URuJ26tX
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果您喜欢这篇文章，可以请我喝杯咖啡～</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
 
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="rootReturn0 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="rootReturn0 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    rootReturn0
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://rootreturn0.github.io/2019/10/06/soul-like/" title="Soul-like">http://rootreturn0.github.io/2019/10/06/soul-like/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
@@ -460,6 +507,21 @@ U2FsdGVkX1+8IsyoWZhODLbqPPWe/9D8k+CdySxS6XbNktof+xMGJtlqTNF/i3Wyx0PgyWj6URuJ26tX
       
 
       
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
       
       
 
@@ -1191,6 +1253,31 @@ U2FsdGVkX1+8IsyoWZhODLbqPPWe/9D8k+CdySxS6XbNktof+xMGJtlqTNF/i3Wyx0PgyWj6URuJ26tX
 
 
   
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "default";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
   
 
   
