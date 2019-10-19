@@ -9,4 +9,4 @@ Disallow: /js/
 Disallow: /css/
 Disallow: /lib/
 
-Sitemap: rootreturn0.github.io/sitemap.xml
+Sitemap: http://rootreturn0.github.io/sitemap.xml
