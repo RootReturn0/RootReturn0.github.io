@@ -1093,7 +1093,7 @@ pre .javascript .function {
   background: transparent;
 }
 .header-inner {
-  position: fixed;
+  position: relative;
 }
 .headband {
   height: 3px;
@@ -1987,7 +1987,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #6bff59;
+  background: #ff4ecf;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3101,4 +3101,20 @@ hr {
   -o-box-shadow: 0 0 5px rgba(202,203,203,0.5);
   -ms-box-shadow: 0 0 5px rgba(202,203,203,0.5);
   box-shadow: 0 0 5px rgba(202,203,203,0.5);
+}
+.back-to-top {
+  right: 60px;
+  width: 70px;
+  height: 900px;
+  top: -900px;
+  bottom: unset;
+  transition: all 0.5s ease-in-out;
+  background: url("/images/scroll.png");
+}
+.back-to-top > i {
+  display: none;
+}
+.back-to-top.back-to-top-on {
+  bottom: unset;
+  top: calc(100vh - 900px - 200px);
 }
