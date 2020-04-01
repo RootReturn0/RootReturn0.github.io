@@ -89,12 +89,10 @@
 <meta property="og:site_name" content="〇">
 <meta property="og:description" content="修改返回顶部样式为猫猫🐱">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://rootreturn0.github.io/2019/11/12/返回顶部/DogAndCat.png">
 <meta property="og:updated_time" content="2019-11-12T07:07:13.455Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="返回顶部">
 <meta name="twitter:description" content="修改返回顶部样式为猫猫🐱">
-<meta name="twitter:image" content="http://rootreturn0.github.io/2019/11/12/返回顶部/DogAndCat.png">
 
 
 
@@ -389,7 +387,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  171
+                  228
                 </span>
               
 
@@ -432,17 +430,16 @@
       
         <p>本文参考<a href="http://yearito.cn/posts/hexo-theme-beautify.html" target="_blank" rel="noopener">yearito</a>的博客。</p>
 <p>最终在博客中产生了莫名萌的效果（</p>
-<img src="//rootreturn0.github.io/2019/11/12/返回顶部/DogAndCat.png" width="200">
-
-
-<h2 id="下载图片"><a href="#下载图片" class="headerlink" title="下载图片"></a>下载图片</h2><p>点击下方按钮可下载本站使用的图片。</p>
-<p><a class="btn" href="//rootreturn0.github.io/images/scroll.png" target="_blank" rel="noopener"><i class="fa fa-download fa-fw"></i>下载图片</a></p>
+<p>&lt;img src=&quot;返回顶部/DogAndCat.png&quot; width=&quot;200&quot; /&gt;</p>
+<h2>下载图片</h2>
+<p>点击下方按钮可下载本站使用的图片。</p>
+<p>&lt;a class=&quot;btn&quot; href=&quot;//rootreturn0.github.io/images/scroll.png&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;i class=&quot;fa fa-download fa-fw&quot;&gt;&lt;/i&gt;下载图片&lt;/a&gt;</p>
 <blockquote>
 <p>实际上什么图片都可以，放到 <code>source\images\</code> 目录下即可</p>
 </blockquote>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>然后在自定义样式文件 <code>themes\next\source\css\_custom\custom.styl</code> 中添加如下代码：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//自定义回到顶部样式</span><br><span class="line"><span class="selector-class">.back-to-top</span> &#123;</span><br><span class="line">  <span class="attribute">right</span>: <span class="number">60px</span>;</span><br><span class="line">  width: 70px;  //图片素材宽度</span><br><span class="line">  height: 900px;  //图片素材高度</span><br><span class="line">  <span class="selector-tag">top</span>: <span class="selector-tag">-900px</span>;</span><br><span class="line">  <span class="selector-tag">bottom</span>: <span class="selector-tag">unset</span>;</span><br><span class="line">  <span class="selector-tag">transition</span>: <span class="selector-tag">all</span> <span class="selector-class">.5s</span> <span class="selector-tag">ease-in-out</span>;</span><br><span class="line">  background: url("/images/scroll.png");</span><br><span class="line"></span><br><span class="line">  //隐藏箭头图标</span><br><span class="line">  &gt; <span class="selector-tag">i</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &amp;<span class="selector-class">.back-to-top-on</span> &#123;</span><br><span class="line">    <span class="attribute">bottom</span>: unset;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">100vh</span> &lt; (<span class="number">900px</span> + <span class="number">200px</span>) ? <span class="built_in">calc</span>( 100vh - 900px - 200px ) : <span class="number">0px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h2>代码</h2>
+<p>然后在自定义样式文件 <code>themes\next\source\css\_custom\custom.styl</code> 中添加如下代码：</p>
+<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//自定义回到顶部样式</span><br><span class="line"><span class="selector-class">.back-to-top</span> &#123;</span><br><span class="line">  <span class="attribute">right</span>: <span class="number">60px</span>;</span><br><span class="line">  width: 70px;  //图片素材宽度</span><br><span class="line">  height: 900px;  //图片素材高度</span><br><span class="line">  <span class="selector-tag">top</span>: <span class="selector-tag">-900px</span>;</span><br><span class="line">  <span class="selector-tag">bottom</span>: <span class="selector-tag">unset</span>;</span><br><span class="line">  <span class="selector-tag">transition</span>: <span class="selector-tag">all</span> <span class="selector-class">.5s</span> <span class="selector-tag">ease-in-out</span>;</span><br><span class="line">  background: url("/images/scroll.png");</span><br><span class="line"></span><br><span class="line">  //隐藏箭头图标</span><br><span class="line">  &gt; <span class="selector-tag">i</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &amp;<span class="selector-class">.back-to-top-on</span> &#123;</span><br><span class="line">    <span class="attribute">bottom</span>: unset;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">100vh</span> &lt; (<span class="number">900px</span> + <span class="number">200px</span>) ? <span class="built_in">calc</span>( 100vh - 900px - 200px ) : <span class="number">0px</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -627,7 +624,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -689,7 +686,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载图片"><span class="nav-number">1.</span> <span class="nav-text">下载图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">下载图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
             
 
           </div>
@@ -724,7 +721,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">13.4k</span>
+    <span title="Site words total count">13.9k</span>
   
   
 <span class="busuanzi-count">

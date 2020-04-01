@@ -428,16 +428,18 @@
       
 
       
-        <h1 id="主题配置文件"><a href="#主题配置文件" class="headerlink" title="主题配置文件"></a>主题配置文件</h1><p>next主题中内置了这一功能，打开主题配置文件，将如下部分注释取消：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Reward</span></span><br><span class="line"><span class="attr">reward_comment:</span> <span class="string">如果您喜欢这篇文章，可以请我喝杯咖啡～</span></span><br><span class="line"><span class="attr">wechatpay:</span> <span class="string">/images/wechatpay.png</span></span><br><span class="line"><span class="attr">alipay:</span> <span class="string">/images/alipay.png</span></span><br><span class="line"><span class="comment">#bitcoin: /images/bitcoin.png</span></span><br></pre></td></tr></table></figure>
-
+        <h1>主题配置文件</h1>
+<p>next主题中内置了这一功能，打开主题配置文件，将如下部分注释取消：</p>
+<p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Reward</span></span><br><span class="line"><span class="attr">reward_comment:</span> <span class="string">如果您喜欢这篇文章，可以请我喝杯咖啡～</span></span><br><span class="line"><span class="attr">wechatpay:</span> <span class="string">/images/wechatpay.png</span></span><br><span class="line"><span class="attr">alipay:</span> <span class="string">/images/alipay.png</span></span><br><span class="line"><span class="comment">#bitcoin: /images/bitcoin.png</span></span><br></pre></td></tr></table></figure></p>
 <p>这里只用到了微信和支付宝。将收款码图片放入<code>yourblog</code>-&gt;<code>themes</code>-&gt;<code>next</code>-&gt;<code>source</code>-&gt;<code>images</code>，命名同上。</p>
-<h1 id="样式"><a href="#样式" class="headerlink" title="样式"></a>样式</h1><p>如果直接采用从微信和支付宝保存下来的收款码，将会产生上下不对称的情况，且二者大小不一。这里采用了简单粗暴的处理办法：</p>
+<h1>样式</h1>
+<p>如果直接采用从微信和支付宝保存下来的收款码，将会产生上下不对称的情况，且二者大小不一。这里采用了简单粗暴的处理办法：</p>
 <ol>
 <li>将图片要保留的内容裁剪成正方形。</li>
 <li>打开<code>yourblog</code>-&gt;<code>themes</code>-&gt;<code>next</code>-&gt;<code>source</code>-&gt;<code>css</code>-&gt;<code>_common</code>-&gt;<code>components</code>-&gt;<code>post</code>-&gt;<code>post-reward.styl</code>，将里面的<code>#QR img</code>块改为以下内容：</li>
 </ol>
-<figure class="highlight styl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#QR</span> img&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">180px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">display</span>: inline-block;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0.8em</span> <span class="number">2em</span> <span class="number">0</span> <span class="number">2em</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight styl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#QR</span> img&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">180px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">display</span>: inline-block;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0.8em</span> <span class="number">2em</span> <span class="number">0</span> <span class="number">2em</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -621,7 +623,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -683,7 +685,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#主题配置文件"><span class="nav-number">1.</span> <span class="nav-text">主题配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#样式"><span class="nav-number">2.</span> <span class="nav-text">样式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">主题配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">样式</span></a></li></ol></div>
             
 
           </div>
@@ -718,7 +720,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">13.4k</span>
+    <span title="Site words total count">13.9k</span>
   
   
 <span class="busuanzi-count">
