@@ -81,18 +81,20 @@
 
 
 
-<meta name="description" content="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose） Ubantu 18.04 安装后使用xrandr查看分辨率，发现分辨率只有 800 x 600 的选项。 首先在网上百度，大多数结果都是使用cvt+xrandr进行修改。然而实际操作过程中，一直无法解决报错failed to get size of gamma for output default。 而后发现使用xdia">
+<meta name="description" content="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）Ubantu 18.04 安装后使用xrandr查看分辨率，发现分辨率只有 800 x 600 的选项。 首先在网上百度，大多数结果都是使用cvt+xrandr进行修改。然而实际操作过程中，一直无法解决报错failed to get size of gamma for output default。 而后发现使用xdiag">
 <meta name="keywords" content="学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ubantu 18.04 修改分辨率">
 <meta property="og:url" content="http://rootreturn0.github.io/2020/04/02/Ubantu 分辨率/index.html">
 <meta property="og:site_name" content="〇">
-<meta property="og:description" content="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose） Ubantu 18.04 安装后使用xrandr查看分辨率，发现分辨率只有 800 x 600 的选项。 首先在网上百度，大多数结果都是使用cvt+xrandr进行修改。然而实际操作过程中，一直无法解决报错failed to get size of gamma for output default。 而后发现使用xdia">
+<meta property="og:description" content="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）Ubantu 18.04 安装后使用xrandr查看分辨率，发现分辨率只有 800 x 600 的选项。 首先在网上百度，大多数结果都是使用cvt+xrandr进行修改。然而实际操作过程中，一直无法解决报错failed to get size of gamma for output default。 而后发现使用xdiag">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdevwcovztj30hi0h6n5n.jpg">
 <meta property="og:updated_time" content="2020-04-01T20:21:28.863Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubantu 18.04 修改分辨率">
-<meta name="twitter:description" content="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose） Ubantu 18.04 安装后使用xrandr查看分辨率，发现分辨率只有 800 x 600 的选项。 首先在网上百度，大多数结果都是使用cvt+xrandr进行修改。然而实际操作过程中，一直无法解决报错failed to get size of gamma for output default。 而后发现使用xdia">
+<meta name="twitter:description" content="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）Ubantu 18.04 安装后使用xrandr查看分辨率，发现分辨率只有 800 x 600 的选项。 首先在网上百度，大多数结果都是使用cvt+xrandr进行修改。然而实际操作过程中，一直无法解决报错failed to get size of gamma for output default。 而后发现使用xdiag">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/00831rSTgy1gdevwcovztj30hi0h6n5n.jpg">
 
 
 
@@ -365,7 +367,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  225
+                  203
                 </span>
               
 
@@ -402,29 +404,30 @@
       
 
       
-        <h1>Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）</h1>
-<p>Ubantu 18.04 安装后使用<code>xrandr</code>查看分辨率，发现分辨率只有 800 x 600 的选项。</p>
+        <h1 id="Ubuntu-18-04-分辨率（xrandr无效，使用xdiagnose）"><a href="#Ubuntu-18-04-分辨率（xrandr无效，使用xdiagnose）" class="headerlink" title="Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）"></a>Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）</h1><p>Ubantu 18.04 安装后使用<code>xrandr</code>查看分辨率，发现分辨率只有 800 x 600 的选项。</p>
 <p>首先在网上百度，大多数结果都是使用<code>cvt</code>+<code>xrandr</code>进行修改。然而实际操作过程中，一直无法解决报错<code>failed to get size of gamma for output default</code>。</p>
 <p>而后发现使用<code>xdiagnose</code>成功解决问题。</p>
-<h2>步骤</h2>
-<ol>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
 <li>下载<code>xdiagnose</code>。<code>xdiagnose</code>并非系统自带，直接使用会发生命令未找到的错误。</li>
 </ol>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install xdiagnose</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install xdiagnose</span><br></pre></td></tr></table></figure>
+
 <ol start="2">
 <li>打开<code>xdiagnose</code>的配置界面。</li>
 </ol>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo xdiagnose</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo xdiagnose</span><br></pre></td></tr></table></figure>
+
 <ol start="3">
 <li>如下图所示，把 <strong>Debug</strong> 部分全部勾上。</li>
 </ol>
-<p>&lt;img src=&quot;https://tva1.sinaimg.cn/large/00831rSTgy1gdevwcovztj30hi0h6n5n.jpg&quot; alt=&quot;xdiagnose&quot; style=&quot;zoom:50%;&quot; /&gt;</p>
+<img src="https://tva1.sinaimg.cn/large/00831rSTgy1gdevwcovztj30hi0h6n5n.jpg" alt="xdiagnose" style="zoom:50%;">
+
 <ol start="4">
 <li>重启，屏幕自动适配。</li>
 </ol>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure></p>
-<h2>选择分辨率</h2>
-<p>重启后可在<code>系统设置 -&gt; 设备 -&gt; 显示</code>中选择分辨率，通过<code>xrandr</code>查看也可看到其他分辨率。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h2 id="选择分辨率"><a href="#选择分辨率" class="headerlink" title="选择分辨率"></a>选择分辨率</h2><p>重启后可在<code>系统设置 -&gt; 设备 -&gt; 显示</code>中选择分辨率，通过<code>xrandr</code>查看也可看到其他分辨率。</p>
 
       
     </div>
@@ -667,7 +670,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.2.</span> <span class="nav-text">选择分辨率</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu-18-04-分辨率（xrandr无效，使用xdiagnose）"><span class="nav-number">1.</span> <span class="nav-text">Ubuntu 18.04 分辨率（xrandr无效，使用xdiagnose）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">1.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择分辨率"><span class="nav-number">1.2.</span> <span class="nav-text">选择分辨率</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -702,7 +705,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">13.9k</span>
+    <span title="Site words total count">13.6k</span>
   
   
 <span class="busuanzi-count">
